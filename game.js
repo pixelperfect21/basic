@@ -88,18 +88,18 @@ function displayAscTree() {
     let position = 0
     while (ascensionTree[layer] !== undefined) {
         if (gameData.ascension.highestLayer >= layer || layer == 0) {
-            ret = ret + "<p>Layer " + (layer + 1) + "</p>"
+            ret = ret + "<p class='ascensionText'>Layer " + (layer + 1) + "</p>"
         }
         while (ascensionTree[layer][position] !== undefined) {
-            ret = ret + "<p></p>"
+            ret = ret + "<p class='ascensionText'></p>"
             if (gameData.ascension.highestLayer >= layer || layer == 0) {
                 if (!gameData.ascension.ascensionTreeUpgrades.includes(layer + "-" + position)) {
-                    ret = ret + "<button onclick='buyAscTreeUpg(" + layer + ", " + position + ")'>" + ascensionTree[layer][position].name + ": " + ascensionTree[layer][position].description + " (Cost: " + ascensionTree[layer][position].cost + ")</button>"
+                    ret = ret + "<button class='ascensionButton' onclick='buyAscTreeUpg(" + layer + ", " + position + ")'>" + ascensionTree[layer][position].name + ": " + ascensionTree[layer][position].description + " (Cost: " + ascensionTree[layer][position].cost + ")</button>"
                 } else {
-                    ret = ret + "<p>" + ascensionTree[layer][position].name + ": " + ascensionTree[layer][position].description + " (Upgrade Bought!)</p>"
+                    ret = ret + "<p class='ascensionText'>" + ascensionTree[layer][position].name + ": " + ascensionTree[layer][position].description + " (Upgrade Bought!)</p>"
                 }
             } else {
-                ret = ret + "<p>Layer " + (layer + 1) + " (Buy an upgrade from the previous layer to unlock)</p>"
+                ret = ret + "<p class='ascensionText'>Layer " + (layer + 1) + " (Buy an upgrade from the previous layer to unlock)</p>"
                 return ret
             }
             position++
