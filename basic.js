@@ -269,11 +269,13 @@ function showBoosts() {
         document.getElementById("pointBoostSecondary").style.display = "inline-block"
         document.getElementById("luckBoostSecondary").style.display = "inline-block"
         document.getElementById("rankBoostSecondary").style.display = "inline-block"
+        document.getElementById("specialBoostEffext").style.display = "inline-block"
     } else {
         document.getElementById("secondaryBoostDisplay").style.display = "none"
         document.getElementById("pointBoostSecondary").style.display = "none"
         document.getElementById("luckBoostSecondary").style.display = "none"
         document.getElementById("rankBoostSecondary").style.display = "none"
+        document.getElementById("specialBoostEffext").style.display = "none"
     }
     if (gameData.basic.rank >= 7) {
         document.getElementById("miniCloverizerPrimary").style.display = "inline-block"
