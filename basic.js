@@ -69,7 +69,7 @@ function getRankProgressGain() {
         gain = gain * (gameData.basic.clovers / 20 + 1)
     }
     if (gameData.basic.rank >= 8) {
-        gain = gain * (getBasicGain() / 50 + 1)
+        gain = gain * (getBasicGain() / 500 + 1)
     }
     gain = gain * (gameData.basic.cUpg3Level + 1)
     if (gameData.ascension.ascensionTreeUpgrades.includes("0-0")) {
