@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="game.js" defer></script> 
+    <script src="settings.js" defer></script> 
+    <script src="basic.js" defer></script>
+    <script src="ascension.js" defer></script>
+  </head>
+  <body>
+    <div id="navigation">
+      <button class="basicButton" onclick="tab('basic')">Basic</button>
+      <button class="ascensionButton" id="ascensionTab" onclick="tab('ascension')">Ascension</button>
+      <button class="basicButton" id="settingsTab" onclick="tab('settings')">Settings</button>
+    </div>
+    <div id="basic">
+      <p></p>
+      <div id="basicNavigation">
+        <button class="basicButton" onclick="basicSubtab('basicMain')">Main</button>
+        <button class="basicButton" id="rankBonusesTab" onclick="basicSubtab('rankBonuses')">Rank Bonuses</button>
+        <button class="basicButton" id="boostTab" onclick="basicSubtab('boosts')">Boosts</button>
+        <button class="basicButton" id="boostIndexTab" onclick="basicSubtab('boostIndex')">Boost Index</button>
+        <button class="cloverButton" id="cloverTab" onclick="basicSubtab('clovers')">Clovers</button>
+      </div>
+      <div id="basicMain">
+        <p class="basicText" id="basicPointsDisplay">0 basic points (Rank 1: 0/100)</p>
+        <button class="basicButton" id="basicPointGain" onclick=gainPoints()>+1 basic point and +1 rank progress</button>
+        <p></p>
+        <button class="basicButton" id="upg1" onclick=upg1()>Basic Point Upgrade (0): +1 basic point gain per level, +10 bonus rank progress on purchase (Cost: 10)</button>
+        <p></p>
+        <button class="basicButton" id="upg2" onclick=upg2()>Rank Progress Upgrade (0): +1 rank progress gain from clicking per level, +50 bonus rank progress on purchase (Cost: 25)</button>
+      </div>
+      <div id="rankBonuses">
+        <p class="basicText" id="rank1">Rank 1: Nothing</p>
+        <p class="basicText" id="rank2">Rank 2: Unlock a new basic point upgrade, basic points are doubled</p>
+        <p class="basicText" id="rank3">Rank 3: Unlock Boosts, +50% more basic points per rank</p>
+        <p class="basicText" id="rank4">Rank 4: +50% more rank progress per rank</p>
+        <p class="basicText" id="rank5">Rank 5: Unlock the ability to activate 2 boosts at once, boosts activate special effects if certain ones are active at the same time, unlock an index for special boost effects</p>
+        <p class="basicText" id="rank7">Rank 7: Unlock a new boost, x1.1 compounding basic point, rank progress, and clover gain per rank starting at 5</p>
+        <p class="basicText" id="rank8">Rank 8: Basic point gain multiplier affects rank progress gain at a reduced rate (50:1)</p>
+        <p class="basicText" id="rank10">Rank 10: Unlock Ascension</p>
+      </div>
+      <div id="boosts">
+        <p class="basicText" id="primaryBoostDisplay">Current active primary boost: None (0 clicks left)</p>
+        <p></p>
+        <button class="basicButton" id="pointBoostPrimary" onclick="pointBoostPrimary()">Activate Point Boost for 500 basic points (Multiplies point gain by 3 for 3 clicks)</button>
+        <p></p>
+        <button class="basicButton" id="luckBoostPrimary" onclick="luckBoostPrimary()">Activate Luck Boost for 750 basic points (50% chance to multiply point gain by 5 but divides gain by 2 if unlucky for 3 clicks)</button>          <p></p>
+        <button class="basicButton" id="rankBoostPrimary" onclick="rankBoostPrimary()">Activate Rank Boost for 1e3 basic points (Multiplies rank progress gain by 2 for 3 clicks)</button>
+        <p></p>
+        <button class="basicButton" id="miniCloverizerPrimary" onclick="cloverBoostPrimary()">Activate Mini Cloverizer Boost for 1e5 basic points (Unlocks clovers but divides clover gain by 2)</button>
+        <p></p>
+        <p class="basicText" id="secondaryBoostDisplay">Current active secondary boost: None</p>
+        <p></p>
+        <button class="basicButton" id="pointBoostSecondary" onclick="pointBoostSecondary()">Activate Point Boost for 500 basic points (Multiplies point gain by 3 for 3 clicks)</button>
+        <p></p>
+        <button class="basicButton" id="luckBoostSecondary" onclick="luckBoostSecondary()">Activate Luck Boost for 750 basic points (50% chance to multiply point gain by 5 but divides gain by 2 if unlucky for 3 clicks)</button>
+        <p></p>
+        <button class="basicButton" id="rankBoostSecondary" onclick="rankBoostSecondary()">Activate Rank Boost for 1e3 basic points (Multiplies rank progress gain by 2 for 3 clicks)</button>
+        <p></p>
+        <button class="basicButton" id="miniCloverizerSecondary" onclick="cloverBoostSecondary()">Activate Mini Cloverizer Boost for 1e5 basic points (Unlocks clovers but divides clover gain by 2)</button>
+        <p class="basicText" id="specialBoostEffect">Boost Combo Effect: None + None = None</p>
+      </div>
+      <div id="boostIndex">
+        <p class="basicText">Mega Point Boost (PB+PB): x4 bonus basic point gain</p>
+        <p class="basicText">Duality Boost (PB+RB): x3 bonus basic point gain and rank progress gain from clicking</p>
+        <p class="basicText">Lucky Rank Boost (LBL+RB): x5 bonus rank progress gain from clicking</p>
+        <p class="basicText">Cloverizer Boost (LBL+LBU): x0 basic point and rank progress gain from clicking. Unlock Clovers and clover upgrades.</p>
+        <div id="postRank7Boosts">
+          <p class="basicText" >Cloverizer+ Boost (MCB+PB): Basic point gain affects clovers at a reduced rate (1e3:1)</p>
+          <p class="basicText" >Mega Cloverizer Boost (MCB+LBL): x10 bonus clover gain</p>
+          <p class="basicText" >Rank Cloverizer Boost (MCB+RB): Clovers affect rank progress gain from clicking at a reduced rate (20:1)</p>
+        </div>
+      </div>
+      <div id="clovers">
+        <p class="cloverText">Clover button will not affect boost time</p>
+        <p class="cloverText" id="cloverDisplay">0 clovers</p>
+        <button class="cloverButton" id="cloverGain" onclick="gainClovers()"">+1 clover</button>
+        <p></p>
+        <button class="cloverButton" id="cUpg1" onclick="cUpg1()">Clover Upgrade (0) +1 clover gain per level, +1e3 bonus rank progress on purchase (Cost: 10)</button>
+        <p></p>
+        <button class="cloverButton" id="cUpg2" onclick="cUpg2()">Clover Basic Point Upgrade (0) +100% basic point gain per level, +3.75e3 bonus rank progress on purchase (Cost: 25)</button>
+        <p></p>
+        <button class="cloverButton" id="cUpg3" onclick="cUpg3()">Clover Rank Progress Upgrade (0) +100% rank progress gain from clicking per level, +1e4 bonus rank progress on purchase (Cost: 50)</button>
+      </div>
+    </div>
+    <div id="settings">
+      <p></p>
+      <button class="basicButton" id="darkModeToggle" onclick="toggleDarkMode()">Dark Mode: OFF</button>
+      <button class="basicButton" id="importSave" onclick="importSave()">Import Save from Clipboard</button>
+      <button class="basicButton" id="exportSave" onclick="exportSave()">Export Save to Clipboard</button>
+      <button class="basicButton" id="hardReset" onclick="hardReset()">HARD RESET</button>
+      <p>Basic: Incremental game by PixelPerfect12</p>
+      <p>Version 1.0: Basic Release</p>
+    </div>
+    <div id="ascension">
+      <p></p>
+      <div id="ascensionNavigation">
+        <button class="ascensionButton" id="ascensionResetTab" onclick="ascensionSubtab('ascensionReset')">Ascend</button>
+        <button class="ascensionButton" id="ascensionTreeTab" onclick="ascensionSubtab('ascensionTree')">Ascension Tree</button>
+        <button class="ascensionButton" id="tierBonusesTab" onclick="ascensionSubtab('tierBonuses')">Tier Bonuses</button>
+      </div>
+      <div id="ascensionReset">
+        <p class="ascensionText" id="ascensionResetDesc">Reset basic points, basic point upgrades, rank progress, and rank. Basic points will be converted into ascension points at a rate of 1e6:1 and your rank will be converted into tier progress. Requires 1e6 basic points and Rank 10 to perform.</p>
+        <button class="ascensionButton" id="ascensionResetButton" onclick="ascensionReset()">+1 ascension point and +1 tier progress</button>
+      </div>
+      <div id="ascensionTree">
+        <p class="ascensionText" id="ascensionDisplay">0 ascension points (Tier 1: 0/10)</p>
+        <p class="ascensionText" >Upgrade tree will be redesigned in a later update</p>
+        <div id="ascensionTreeDisplay">
+
+        </div>
+      </div>
+      <div id="tierBonuses">
+        <p id="tier1">Tier 1: Nothing</p>
+        <p id="tier2">Tier 2: x10 Clover gain, Clovers multiply Tier Progress gain at a reduced rate (1e6:1)</p>
+        <p id="tier3">Tier 3: Rank progress multiplier to clicking affect rank progress multiplier to upgrades at a reduced rate (100:1)</p>
+        <p id="tier4">Tier 4: Current endgame as of BASIC: Basic Update</p>
+      </div>
+    </div>
+  </body>
+</html>
