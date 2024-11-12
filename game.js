@@ -18,7 +18,8 @@ var gameData = {
         ascensionPoints: 0,
         tier: 0,
         tierProgress: 0,
-        ascensionTreeUpgrades: []
+        ascensionTreeUpgrades: [],
+        highestLayer: 0,
     }
 }
 var savegame = JSON.parse(localStorage.getItem("basicSave"))
