@@ -69,7 +69,7 @@ function getRankProgressGain() {
         gain = gain * (gameData.basic.clovers / 20 + 1)
     }
     if (gameData.basic.rank >= 8) {
-        gain = gain * (getBasicGain() / 500 + 1)
+        gain = gain * (getBasicGain() / 5000 + 1)
     }
     gain = gain * (gameData.basic.cUpg3Level + 1)
     if (gameData.ascension.ascensionTreeUpgrades.includes("0-0")) {
@@ -141,6 +141,9 @@ function getBoostLength() {
     if (gameData.ascension.ascensionTreeUpgrades.includes("1-1")) {
         length = length + 4
     }
+    if (gameData.ascension.tier >= 5) {
+        length = length + gameData.ascension.tier - 3 
+    }
     return length
 }
 function getUpgradeRPMult() {
@@ -152,7 +155,7 @@ function getUpgradeRPMult() {
         mult = mult * 4
     }
     if (gameData.ascension.tier >= 3) {
-        mult = mult * (getRankProgressGain()/100 + 1)
+        mult = mult * (getRankProgressGain() / 5000 + 1)
     }
     return mult
 }
@@ -161,6 +164,11 @@ function checkRankProgress() {
     if (gameData.basic.rankProgress >= getRankReq()) {
         gameData.basic.rankProgress -= getRankReq()
         gameData.basic.rank++
+    }  
+}
+function checkHighestRank() {
+    if (gameData.basic.rank >= gameData.basic.bestRank) {
+        gameData.basic.bestRank = gameData.basic.rank
     }  
 }
 function checkSpecialBoost() {
@@ -233,34 +241,34 @@ function getSpecialBoostDesc() {
     }
     return ""
 }
+function getRankBonuses() {
+    let ret = "<p class='basicText'>Rank 1: Nothing</p><p class='basicText'>Rank 2: Unlock a new basic point upgrade, basic points are doubled</p>"
+    if (gameData.basic.bestRank >= 2) {
+        ret = ret + "<p class='basicText'>Rank 3: Unlock Boosts, +50% more basic points per rank</p>"
+    }
+    if (gameData.basic.bestRank >= 3) {
+        ret = ret + "<p class='basicText'>Rank 4: +50% more rank progress per rank</p>"
+    }
+    if (gameData.basic.bestRank >= 4) {
+        ret = ret + "<p class='basicText'>Rank 5: Unlock the ability to activate 2 boosts at once, boosts activate special effects if certain ones are active at the same time, unlock an index for special boost effects</p>"
+    }
+    if (gameData.basic.bestRank >= 5) {
+        ret = ret + "<p class='basicText'>Rank 7: Unlock a new boost, x1.1 compounding basic point, rank progress, and clover gain per rank starting at 5</p>"
+    }
+    if (gameData.basic.bestRank >= 7) {
+        ret = ret + "<p class='basicText'>Rank 8: Basic point gain multiplier affects rank progress gain at a reduced rate (5000:1)</p>"
+    }
+    if (gameData.basic.bestRank >= 8) {
+        ret = ret + "<p class='basicText'>Rank 10: Unlock Ascension</p>"
+    }
+    return ret
+}
 // Unlock related functions
 function showUpgrades() {
     if (gameData.basic.rank >= 2) {
         document.getElementById("upg2").style.display = "inline-block"
     } else {
         document.getElementById("upg2").style.display = "none"
-    }
-}
-function showRankBonuses() {
-    if (gameData.basic.rank >= 1) {
-        document.getElementById("rank1").style.display = "inline-block"
-    } else {
-        document.getElementById("rank1").style.display = "none"
-    }
-    if (gameData.basic.rank >= 2) {
-        document.getElementById("rank2").style.display = "inline-block"
-    } else {
-        document.getElementById("rank2").style.display = "none"
-    }
-    if (gameData.basic.rank >= 3) {
-        document.getElementById("rank3").style.display = "inline-block"
-    } else {
-        document.getElementById("rank3").style.display = "none"
-    }
-    if (gameData.basic.rank >= 4) {
-        document.getElementById("rank4").style.display = "inline-block"
-    } else {
-        document.getElementById("rank4").style.display = "none"
     }
 }
 function showBoosts() {
@@ -295,6 +303,8 @@ function showSpecialBoosts() {
 // Clickable related functions
 function gainPoints() {
     updateAscTree()
+    updateRankBonuses()
+    updateTierBonuses()
     gameData.basic.basicPoints += getBasicGain()
     gameData.basic.rankProgress += getRankProgressGain()
     if (gameData.basic.boostDuration > 0) {
@@ -406,4 +416,10 @@ function cloverBoostSecondary() {
         gameData.basic.currentActiveSecondaryBoost = "Mini Cloverizer Boost"
         gameData.basic.boostDuration = getBoostLength()
     }
+}
+// Updater functions
+function updateRankBonuses() {
+    document.getElementById("rankBonuses").innerHTML = getRankBonuses()
+    toggleDarkMode()
+    toggleDarkMode()
 }

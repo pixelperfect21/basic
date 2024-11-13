@@ -1,6 +1,9 @@
 // Calculation related functions
 function getAscensionGain() {
     let gain = Math.floor(gameData.basic.basicPoints / 1e6)
+    if (gameData.ascension.tier >= 2) {
+        gain = gain * (gameData.ascension.tier / 4 + 1)
+    }
     return gain
 }
 function getTierProgressGain() {
@@ -24,6 +27,24 @@ function checkTierProgress() {
         gameData.ascension.tierProgress -= getTierReq()
         gameData.ascension.tier++
     }
+}
+function checkHighestTier() {
+    if (gameData.ascension.tier >= gameData.ascension.bestTier) {
+        gameData.ascension.bestTier = gameData.ascension.tier
+    }  
+}
+function getTierBonuses() {
+    let ret = "<p class='ascensionText'>Tier 1: Nothing</p><p class='ascensionText'>Tier 2: x10 Clover gain, Clovers multiply Tier Progress gain at a reduced rate (1e6:1)</p>"
+    if (gameData.ascension.bestTier >= 2) {
+        ret = ret + "<p class='ascensionText'>Tier 3: Rank progress multiplier to clicking affect rank progress multiplier to upgrades at a reduced rate (5000:1)</p>"
+    }
+    if (gameData.ascension.bestTier >= 3) {
+        ret = ret + "<p class='ascensionText'>Tier 4: +25% ascension point gain per tier</p>"
+    }
+    if (gameData.ascension.bestTier >= 4) {
+        ret = ret + "<p class='ascensionText'>Tier 5: +1 boost length per tier starting at 3</p>"
+    }
+    return ret
 }
 // Clickable related functions 
 function ascensionReset() {
@@ -57,13 +78,13 @@ var ascensionTree = {
         0: {
             name: "Longer Boosts",
             description: "Boosts are 4 clicks longer.",
-            cost: 4,
+            cost: 40,
             requirement: true
         },
         1: {
             name: "Better Upgrades",
             description: "x4 rank progress gain from upgrades.",
-            cost: 4,
+            cost: 40,
             requirement: true
         }
     },
@@ -71,28 +92,28 @@ var ascensionTree = {
         0: {
             name: "Ascended Basic Points",
             description: "x5 basic point gain.",
-            cost: 9,
+            cost: 900,
             requirement: true
         },
         1: {
             name: "Ascended Rank Progress",
             description: "x3 rank progress gain from clicking.",
-            cost: 9,
+            cost: 900,
             requirement: true
         },
         2: {
             name: "Ascended Clovers",
             description: "x5 clover gain.",
-            cost: 9,
+            cost: 900,
             requirement: true
         }
     },
     3: {
         0: {
             name: "Tier Up",
-            description: "x5 Tier Progress gain. Requires \"Ascended Rank Progress\".",
-            cost: 16,
-            requirement: gameData.ascension.ascensionTreeUpgrades.includes("2-1")
+            description: "x5 Tier Progress on ascension. This is the final upgrade (as of now).",
+            cost: 16000,
+            requirement: true
         }
     }
 }
@@ -106,4 +127,10 @@ function buyAscTreeUpg(layer, position) {
         }
         updateAscTree()
     }
+}
+// Updater functions
+function updateTierBonuses() {
+    document.getElementById("tierBonuses").innerHTML = getTierBonuses()
+    toggleDarkMode()
+    toggleDarkMode()
 }

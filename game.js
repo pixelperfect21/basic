@@ -3,6 +3,7 @@ var gameData = {
     basic: {
         basicPoints: 0,
         rank: 1,
+        bestRank: 0,
         rankProgress: 0,
         upg1Level: 0,
         upg2Level: 0,
@@ -17,6 +18,7 @@ var gameData = {
     ascension: {
         ascensionPoints: 0,
         tier: 0,
+        bestTier: 0,
         tierProgress: 0,
         ascensionTreeUpgrades: [],
         highestLayer: 0,
@@ -148,14 +150,20 @@ function update() {
     // Ascension Tab
     document.getElementById("ascensionResetButton").innerHTML = "+" + formatNumber(getAscensionGain()) + " ascension points and +" + formatNumber(getTierProgressGain()) + " tier progress"
     document.getElementById("ascensionDisplay").innerHTML = formatNumber(gameData.ascension.ascensionPoints) + " ascension points (Tier " + gameData.ascension.tier + ": " + formatNumber(gameData.ascension.tierProgress) + "/" + formatNumber(getTierReq()) + ")"
+    document.getElementById("tierBonuses").innerHTML = getTierBonuses()
+
 }
 // Loops
 var tickLoop = window.setInterval(function() {
     update()
+    updateRankBonuses()
+    updateTierBonuses()
 
     checkRankProgress()
     checkSpecialBoost()
     checkTierProgress()
+    checkHighestRank()
+    checkHighestTier()
 
     showUpgrades()
     showTabs()
@@ -169,3 +177,14 @@ var genLoop = window.setInterval(function() {
 var saveGameLoop = window.setInterval(function() {
     localStorage.setItem("basicSave", JSON.stringify(gameData))
 }, 15000)
+/* 
+var devAutomationLoop = window.setInterval(function() {
+    gainPoints()
+    gainClovers()
+    upg1()
+    upg2()
+    cUpg1()
+    cUpg2()
+    cUpg3()
+}, 1000)
+*/

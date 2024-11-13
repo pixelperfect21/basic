@@ -58,6 +58,7 @@ function hardReset() {
             basic: {
                 basicPoints: 0,
                 rank: 1,
+                bestRank: 0,
                 rankProgress: 0,
                 upg1Level: 0,
                 upg2Level: 0,
@@ -72,9 +73,10 @@ function hardReset() {
             ascension: {
                 ascensionPoints: 0,
                 tier: 0,
+                bestTier: 0,
                 tierProgress: 0,
                 ascensionTreeUpgrades: [],
-                highestLayer: 0
+                highestLayer: 0,
             }
         }
         alert("Your save has been reset.")
