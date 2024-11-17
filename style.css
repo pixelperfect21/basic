@@ -15,8 +15,12 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 500;
+    &:disabled {
+        background-color: var(--color, #efefef) !important;
+        cursor: not-allowed;
+    }
 }
 .cloverText {
     font-family: Arial, Helvetica, sans-serif;
@@ -32,8 +36,12 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 500;
+    &:disabled {
+        background-color: #084f08 !important;
+        cursor: not-allowed;
+    }
 }
 .ascensionText {
     font-family: 'Times New Roman', Times, serif;
@@ -49,6 +57,10 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 500;
-}
+    &:disabled {
+        background-color: #4f0808 !important;
+        cursor: not-allowed;
+    }
+}    

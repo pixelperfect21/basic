@@ -12,6 +12,7 @@ function toggleDarkMode() {
             basicButton[i].style.color = 'rgb(255, 255, 255)';
             basicButton[i].style.borderColor = 'rgb(255, 255, 255)';
             basicButton[i].style.backgroundColor = 'rgb(0, 0, 0)';
+            basicButton[i].style.setProperty('--color', '#2f2f2f');
         }
         darkMode = 1
         localStorage.setItem("darkMode", darkMode)
@@ -27,6 +28,7 @@ function toggleDarkMode() {
             basicButton[i].style.color = 'rgb(0, 0, 0)';
             basicButton[i].style.borderColor = 'rgb(0, 0, 0)';
             basicButton[i].style.backgroundColor = 'rgb(255, 255, 255)';
+            basicButton[i].style.setProperty('--color', '#dfdfdf');
         }
         darkMode = 0
         localStorage.setItem("darkMode", darkMode)
@@ -45,6 +47,7 @@ function importSave() {
         gameData = JSON.parse(atob(encodedSave))
         alert("Save imported.")
     }
+    checkOutdatedSave()
 }
 function exportSave() {
     let text = btoa(JSON.stringify(gameData))
@@ -62,6 +65,7 @@ function hardReset() {
                 rankProgress: 0,
                 upg1Level: 0,
                 upg2Level: 0,
+                upg3Level: 0,
                 currentActivePrimaryBoost: "None",
                 currentActiveSecondaryBoost: "None",
                 boostDuration: 0,
@@ -77,6 +81,18 @@ function hardReset() {
                 tierProgress: 0,
                 ascensionTreeUpgrades: [],
                 highestLayer: 0,
+                automationToggles: {
+                    basicAutoclick: 0,
+                    cloverAutoclick: 0,
+                    basicAutobuy: 0,
+                    cloverAutobuy: 0,
+                    boostAutobuy: 0,
+                },
+                basicAscenders: 0,
+                cloverAscenders: 0,
+                rankAscenders: 0,
+                tierAscenders: 0,
+                ascensionAscenders: 0,
             }
         }
         alert("Your save has been reset.")

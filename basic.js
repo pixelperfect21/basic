@@ -38,10 +38,17 @@ function getBasicGain() {
     if (gameData.basic.rank >= 7) {
         gain = gain * Math.pow(1.1, gameData.basic.rank - 5)
     }
-    if (gameData.ascension.ascensionTreeUpgrades.includes("2-0")) {
+    if (gameData.ascension.ascensionTreeUpgrades.includes("3-0")) {
         gain = gain * 5
     }
     gain = gain * (gameData.basic.cUpg2Level + 1)
+    gain = gain * (Math.pow(1.25, gameData.ascension.basicAscenders))
+    if (checkSpecialBoost() == "Descension Boost") {
+        gain = gain * 720
+    }
+    if (checkSpecialBoost() == "Convenience Boost") {
+        gain = gain * 36
+    }
     return gain
 }
 function getRankProgressGain() {
@@ -65,7 +72,7 @@ function getRankProgressGain() {
     if (gameData.basic.rank >= 7) {
         gain = gain * Math.pow(1.1, gameData.basic.rank - 5)
     }
-    if (checkSpecialBoost() == "Rank Cloverizer Boost") {
+    if (checkSpecialBoost() == "Rank Cloverizer Boost" || checkSpecialBoost() == "Convenience Boost") {
         gain = gain * (gameData.basic.clovers / 20 + 1)
     }
     if (gameData.basic.rank >= 8) {
@@ -75,9 +82,10 @@ function getRankProgressGain() {
     if (gameData.ascension.ascensionTreeUpgrades.includes("0-0")) {
         gain = gain * 2
     }
-    if (gameData.ascension.ascensionTreeUpgrades.includes("2-1")) {
+    if (gameData.ascension.ascensionTreeUpgrades.includes("3-1")) {
         gain = gain * 3
     }
+    gain = gain * (Math.pow(1.25, gameData.ascension.rankAscenders))
     return gain
 }
 function getCloverGain() {
@@ -91,19 +99,20 @@ function getCloverGain() {
     if (gameData.basic.rank >= 7) {
         gain = gain * Math.pow(1.1, gameData.basic.rank - 5)
     }
-    if (checkSpecialBoost() == "Cloverizer+ Boost") {
+    if (checkSpecialBoost() == "Cloverizer+ Boost" || checkSpecialBoost() == "Convenience Boost") {
         gain = gain * (getBasicGain() / 1000 + 1)
     }
     if (checkSpecialBoost() == "Mega Cloverizer Boost") {
         gain = gain * 10
     }
     gain = gain * (gameData.basic.cUpg1Level + 1)
-    if (gameData.ascension.ascensionTreeUpgrades.includes("2-2")) {
+    if (gameData.ascension.ascensionTreeUpgrades.includes("3-2")) {
         gain = gain * 5
     }
     if (gameData.ascension.tier >= 2) {
         gain = gain * 10
     }
+    gain = gain * (Math.pow(1.25, gameData.ascension.cloverAscenders))
     return gain
 }
 function getUpg1Cost() {
@@ -114,6 +123,11 @@ function getUpg1Cost() {
 function getUpg2Cost() {
     let cost = 25
     cost = cost * (1 + 0.3 * gameData.basic.upg2Level) * Math.pow(1.25, gameData.basic.upg2Level)
+    return cost
+}
+function getUpg3Cost() {
+    let cost = 1000
+    cost = cost * Math.pow(10, gameData.basic.upg3Level)
     return cost
 }
 function getRankReq() {
@@ -137,12 +151,13 @@ function getCUpg3Cost() {
     return cost
 }
 function getBoostLength() {
-    let length = 3
-    if (gameData.ascension.ascensionTreeUpgrades.includes("1-1")) {
-        length = length + 4
+    let length = 7
+    length = length + gameData.basic.upg3Level
+    if (gameData.ascension.ascensionTreeUpgrades.includes("2-0")) {
+        length = length + 8
     }
     if (gameData.ascension.tier >= 5) {
-        length = length + gameData.ascension.tier - 3 
+        length = length + ((gameData.ascension.tier - 3) * 6)
     }
     return length
 }
@@ -151,7 +166,7 @@ function getUpgradeRPMult() {
     if (gameData.ascension.ascensionTreeUpgrades.includes("0-0")) {
         mult = mult * 2
     }
-    if (gameData.ascension.ascensionTreeUpgrades.includes("1-0")) {
+    if (gameData.ascension.ascensionTreeUpgrades.includes("2-1")) {
         mult = mult * 4
     }
     if (gameData.ascension.tier >= 3) {
@@ -211,6 +226,24 @@ function checkSpecialBoost() {
     if (gameData.basic.currentActivePrimaryBoost == "Rank Boost" && gameData.basic.currentActiveSecondaryBoost == "Mini Cloverizer Boost") {
         return "Rank Cloverizer Boost"
     }
+    if (gameData.basic.currentActivePrimaryBoost == "Ascension Boost" && gameData.basic.currentActiveSecondaryBoost == "Luck Boost (Unlucky...)") {
+        return "Descension Boost"
+    } 
+    if (gameData.basic.currentActivePrimaryBoost == "Luck Boost (Unlucky...)" && gameData.basic.currentActiveSecondaryBoost == "Ascension Boost") {
+        return "Descension Boost"
+    } 
+    if (gameData.basic.currentActivePrimaryBoost == "Ascension Boost" && gameData.basic.currentActiveSecondaryBoost == "Rank Boost") {
+        return "Ranked Up Tier Boost"
+    }
+    if (gameData.basic.currentActivePrimaryBoost == "Rank Boost" && gameData.basic.currentActiveSecondaryBoost == "Ascension Boost") {
+        return "Ranked Up Tier Boost"
+    }
+    if (gameData.basic.currentActivePrimaryBoost == "Ascension Boost" && gameData.basic.currentActiveSecondaryBoost == "Mini Cloverizer Boost") {
+        return "Convenience Boost"
+    }
+    if (gameData.basic.currentActivePrimaryBoost == "Mini Cloverizer Boost" && gameData.basic.currentActiveSecondaryBoost == "Ascension Boost") {
+        return "Convenience Boost"
+    }
     return "None"
     // Use as template
     /* if (gameData.basic.currentActivePrimaryBoost == "" && gameData.basic.currentActiveSecondaryBoost == "") {
@@ -239,6 +272,15 @@ function getSpecialBoostDesc() {
     if (checkSpecialBoost() == "Rank Cloverizer Boost") {
         return " (Clovers affect rank progress gain from clicking at a reduced rate (20:1))"
     }
+    if (checkSpecialBoost() == "Descension Boost") {
+        return " (x720 bonus basic point gain (Effectively x10 Mega Point Boost's effect))"
+    }
+    if (checkSpecialBoost() == "Ranked Up Tier Boost") {
+        return " (Rank multiplies tier progress gain at a reduced rate (10:1))"
+    }
+    if (checkSpecialBoost() == "Convenience Boost") {
+        return " (x36 bonus point gain, activate Cloverizer+ Boost and Rank Cloverizer Boost for free)"
+    }
     return ""
 }
 function getRankBonuses() {
@@ -247,7 +289,7 @@ function getRankBonuses() {
         ret = ret + "<p class='basicText'>Rank 3: Unlock Boosts, +50% more basic points per rank</p>"
     }
     if (gameData.basic.bestRank >= 3) {
-        ret = ret + "<p class='basicText'>Rank 4: +50% more rank progress per rank</p>"
+        ret = ret + "<p class='basicText'>Rank 4: Unlock a new basic point upgrade, +50% more rank progress per rank</p>"
     }
     if (gameData.basic.bestRank >= 4) {
         ret = ret + "<p class='basicText'>Rank 5: Unlock the ability to activate 2 boosts at once, boosts activate special effects if certain ones are active at the same time, unlock an index for special boost effects</p>"
@@ -269,6 +311,11 @@ function showUpgrades() {
         document.getElementById("upg2").style.display = "inline-block"
     } else {
         document.getElementById("upg2").style.display = "none"
+    }
+    if (gameData.basic.rank >= 4) {
+        document.getElementById("upg3").style.display = "inline-block"
+    } else {
+        document.getElementById("upg3").style.display = "none"
     }
 }
 function showBoosts() {
@@ -292,6 +339,13 @@ function showBoosts() {
         document.getElementById("miniCloverizerPrimary").style.display = "none"
         document.getElementById("miniCloverizerSecondary").style.display = "none"
     }
+    if (gameData.ascension.tier >= 20) {
+        document.getElementById("ascendedBoostPrimary").style.display = "inline-block"
+        document.getElementById("ascendedBoostSecondary").style.display = "inline-block"
+    } else {
+        document.getElementById("ascendedBoostPrimary").style.display = "none"
+        document.getElementById("ascendedBoostSecondary").style.display = "none"
+    }
 }
 function showSpecialBoosts() {
     if (gameData.basic.rank >= 7) {
@@ -299,9 +353,15 @@ function showSpecialBoosts() {
     } else {
         document.getElementById("postRank7Boosts").style.display = "none"
     }
+    if (gameData.ascension.tier >= 20) {
+        document.getElementById("postTier20Boosts").style.display = "inline-block"
+    } else {
+        document.getElementById("postTier20Boosts").style.display = "none"
+    }
 }
 // Clickable related functions
 function gainPoints() {
+    let button = document.getElementById("basicPointGain")
     updateAscTree()
     updateRankBonuses()
     updateTierBonuses()
@@ -311,12 +371,21 @@ function gainPoints() {
         gameData.basic.boostDuration--
     }
     if (gameData.basic.boostDuration == 0) {
-        gameData.basic.currentActivePrimaryBoost = "None"
-        gameData.basic.currentActiveSecondaryBoost = "None"
+        if (gameData.ascension.ascensionTreeUpgrades.includes("5-1") && gameData.ascension.automationToggles.boostAutobuy == 1) {
+            gameData.basic.boostDuration = getBoostLength()
+        } else {
+            gameData.basic.currentActivePrimaryBoost = "None"
+            gameData.basic.currentActiveSecondaryBoost = "None"
+        }
     }
+    button.disabled = true
+    setTimeout(function() {button.disabled = false}, 1000)
 }
 function gainClovers() {
+    let button = document.getElementById("cloverGain")
     gameData.basic.clovers += getCloverGain()
+    button.disabled = true
+    setTimeout(function() {button.disabled = false}, 1000)
 }
 function upg1() {
     if (gameData.basic.basicPoints >= getUpg1Cost()) {
@@ -330,6 +399,12 @@ function upg2() {
         gameData.basic.basicPoints -= getUpg2Cost()
         gameData.basic.rankProgress += getUpg2Cost() * 2 * getUpgradeRPMult()
         gameData.basic.upg2Level++
+    }
+}
+function upg3() {
+    if (gameData.basic.basicPoints >= getUpg3Cost()) {
+        gameData.basic.basicPoints -= getUpg3Cost()
+        gameData.basic.upg3Level++
     }
 }
 function pointBoostPrimary() {
@@ -417,9 +492,21 @@ function cloverBoostSecondary() {
         gameData.basic.boostDuration = getBoostLength()
     }
 }
+function ascendedBoostPrimary() {
+    if (gameData.basic.basicPoints >= 1e12) {
+        gameData.basic.basicPoints -= 1e12
+        gameData.basic.currentActivePrimaryBoost = "Ascension Boost"
+        gameData.basic.boostDuration = getBoostLength()
+    }
+}
+function ascendedBoostSecondary() {
+    if (gameData.basic.basicPoints >= 1e12) {
+        gameData.basic.basicPoints -= 1e12
+        gameData.basic.currentActiveSecondaryBoost = "Ascension Boost"
+        gameData.basic.boostDuration = getBoostLength()
+    }
+}
 // Updater functions
 function updateRankBonuses() {
     document.getElementById("rankBonuses").innerHTML = getRankBonuses()
-    toggleDarkMode()
-    toggleDarkMode()
 }
