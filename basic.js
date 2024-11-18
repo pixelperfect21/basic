@@ -509,4 +509,6 @@ function ascendedBoostSecondary() {
 // Updater functions
 function updateRankBonuses() {
     document.getElementById("rankBonuses").innerHTML = getRankBonuses()
+    toggleDarkMode()
+    toggleDarkMode()
 }
